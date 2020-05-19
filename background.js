@@ -1,0 +1,1 @@
+console.log("mock-header-chrome-plugin init");

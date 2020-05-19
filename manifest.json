@@ -1,0 +1,13 @@
+{
+    "name": "mock-header-chrome-plugin",
+    "version": "0.1",
+    "description": "模拟 http 请求头 插件",
+    "permissions": [
+    ],
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": true
+    },
+    "manifest_version": 2
+  }
+  
