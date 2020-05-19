@@ -3,6 +3,10 @@
     "version": "0.1",
     "description": "模拟 http 请求头 插件",
     "permissions": [
+     "http://*/",
+      "https://*/",
+      "webRequest",
+      "webRequestBlocking"
     ],
     "background": {
       "scripts": ["background.js"],
