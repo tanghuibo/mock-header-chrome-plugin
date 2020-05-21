@@ -8,6 +8,9 @@
       "webRequest",
       "webRequestBlocking"
     ],
+    "browser_action": {
+      "default_popup": "./pop/index.html"
+    },
     "background": {
       "scripts": ["background.js"],
       "persistent": true
