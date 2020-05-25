@@ -5,16 +5,16 @@ import "./App.css";
 const data = [
   {
     username: "张三",
-    desc: "会开锁"
+    desc: "会开锁",
   },
   {
     username: "李四",
-    desc: "会IT"
+    desc: "会IT",
   },
   {
     username: "王五",
-    desc: "会武功"
-  }
+    desc: "会武功",
+  },
 ];
 
 function App() {
@@ -43,10 +43,17 @@ function App() {
           renderItem={(item) => (
             <List.Item>
               <List.Item.Meta
-                avatar={
-                  <Avatar className="Avatar">{item.username}</Avatar>
+                avatar={<Avatar className="Avatar" size={48}>{item.username}</Avatar>}
+                title={
+                  <div
+                    style={{
+                      fontWeight: 600,
+                      fontSize: "1.3rem"
+                    }}
+                  >
+                    {item.username}
+                  </div>
                 }
-                title={item.username}
                 description={item.desc}
               />
             </List.Item>

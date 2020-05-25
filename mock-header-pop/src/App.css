@@ -2,11 +2,11 @@
   width: 400px;
 }
 .ant-avatar.Avatar {
-  background: #1890ff;
+  background: rgb(233, 104, 107);
   cursor: pointer;
   transition: background 0.5s;
 }
 
 .ant-avatar.Avatar:hover {
-  background: #ff4d4f;
+  background: #ba3537;
 }
