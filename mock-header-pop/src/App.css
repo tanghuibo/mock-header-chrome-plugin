@@ -1,4 +1,12 @@
 .App {
   width: 400px;
-  border: 1px solid black;
+}
+.ant-avatar.Avatar {
+  background: #1890ff;
+  cursor: pointer;
+  transition: background 0.5s;
+}
+
+.ant-avatar.Avatar:hover {
+  background: #ff4d4f;
 }

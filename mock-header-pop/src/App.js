@@ -1,40 +1,58 @@
-import React from "react";
-import { List, Avatar } from "antd";
+import React, { useState } from "react";
+import { List, Avatar, Card, Input } from "antd";
 import "./App.css";
 
 const data = [
   {
-    title: "Ant Design Title 1",
+    username: "张三",
+    desc: "会开锁"
   },
   {
-    title: "Ant Design Title 2",
+    username: "李四",
+    desc: "会IT"
   },
   {
-    title: "Ant Design Title 3",
-  },
-  {
-    title: "Ant Design Title 4",
-  },
+    username: "王五",
+    desc: "会武功"
+  }
 ];
 
 function App() {
+  const [searchContent, setSearchContent] = useState("");
   return (
     <div className="App">
-      <List
-        itemLayout="horizontal"
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item>
-            <List.Item.Meta
-              avatar={
-                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-              }
-              title={<a href="https://ant.design">{item.title}</a>}
-              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-            />
-          </List.Item>
-        )}
-      />
+      <Card
+        style={{
+          textAlign: "center",
+        }}
+      >
+        <Input.Search
+          value={searchContent}
+          onChange={({ target: { value } }) => setSearchContent(value)}
+          style={{ width: "90%" }}
+        />
+      </Card>
+      <Card>
+        <List
+          itemLayout="horizontal"
+          dataSource={data.filter((item) =>
+            searchContent === null || searchContent === ""
+              ? true
+              : JSON.stringify(item).indexOf(searchContent) >= 0
+          )}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={
+                  <Avatar className="Avatar">{item.username}</Avatar>
+                }
+                title={item.username}
+                description={item.desc}
+              />
+            </List.Item>
+          )}
+        />
+      </Card>
     </div>
   );
 }
