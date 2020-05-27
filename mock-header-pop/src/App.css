@@ -10,3 +10,9 @@
 .ant-avatar.Avatar:hover {
   background: #ba3537;
 }
+.all-swatch {
+  position: relative;
+  float: right;
+  top: 10px;
+  right: 15px;
+}
