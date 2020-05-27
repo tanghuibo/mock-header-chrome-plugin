@@ -7,7 +7,9 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "antd": "^4.2.4",
+    "codemirror": "^5.54.0",
     "react": "^16.13.1",
+    "react-codemirror": "^1.0.0",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"
   },
@@ -16,7 +18,7 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject"
   },
-  "homepage":"./",
+  "homepage": "./",
   "eslintConfig": {
     "extends": "react-app"
   },

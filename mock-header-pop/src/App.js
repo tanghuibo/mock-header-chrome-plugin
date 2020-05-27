@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { List, Avatar, Card, Input, Radio, Button, Switch } from "antd";
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
+import DownloadDialog from "./components/DownloadDialog";
 
 import "./App.css";
 
@@ -22,8 +23,10 @@ const data = [
 function App() {
   const [searchContent, setSearchContent] = useState("");
   const [mainSwatch, setMainSwatch] = useState(false);
+  const downloadDialog = useRef(null);
   return (
     <div className="App">
+      <DownloadDialog ref={downloadDialog} />
       <Card
         style={{
           textAlign: "center",
@@ -56,6 +59,9 @@ function App() {
               }
             ></Button>,
             <Button
+              onClick={() => {
+                downloadDialog.current.show();
+              }}
               type="link"
               icon={
                 <DownloadOutlined
@@ -105,7 +111,9 @@ function App() {
           </div>
         </Card>
       ) : (
-        <Card><div style={{textAlign: "center"}}>插件已关闭</div></Card>
+        <Card>
+          <div style={{ textAlign: "center" }}>插件已关闭</div>
+        </Card>
       )}
     </div>
   );
