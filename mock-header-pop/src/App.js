@@ -7,7 +7,11 @@ import UploadDialog from "./components/UploadDialog";
 import "./App.css";
 
 function App() {
-  const [searchContent, setSearchContent] = useState("");
+  const [searchContent, setSearchContent] = useState(null);
+  const [mainSwatch, setMainSwatch] = useState(false);
+  const [selectUsername, setSelectUsername] = useState(false);
+  const downloadDialog = useRef(null);
+  const uploadDialog = useRef(null);
   const [data, setData] = useState([
     {
       username: "张三",
@@ -22,13 +26,23 @@ function App() {
       desc: "会武功",
     },
   ]);
-  const [mainSwatch, setMainSwatch] = useState(false);
-  const downloadDialog = useRef(null);
-  const uploadDialog = useRef(null);
+  function uploadData(data, isOk) {
+    setTimeout(() => {
+      setData(data);
+      isOk(true);
+    }, 2000);
+  }
+  function changeSelectUser(checked, username) {
+    if (!checked) {
+      setSelectUsername(null);
+    } else {
+      setSelectUsername(username);
+    }
+  }
   return (
     <div className="App">
       <DownloadDialog ref={downloadDialog} />
-      <UploadDialog ref={uploadDialog} onSubmit={setData} />
+      <UploadDialog ref={uploadDialog} onSubmit={uploadData} />
       <Card
         style={{
           textAlign: "center",
@@ -42,7 +56,7 @@ function App() {
         <Switch
           checkedChildren="开启"
           unCheckedChildren="关闭"
-          value={mainSwatch}
+          checked={mainSwatch}
           onChange={setMainSwatch}
           className="all-swatch"
         />
@@ -91,7 +105,18 @@ function App() {
                   : JSON.stringify(item).indexOf(searchContent) >= 0
               )}
               renderItem={(item) => (
-                <List.Item actions={[<Radio>启用</Radio>]}>
+                <List.Item
+                  actions={[
+                    <Radio
+                      checked={selectUsername === item.username}
+                      onChange={(checked) =>
+                        changeSelectUser(checked, item.username)
+                      }
+                    >
+                      启用
+                    </Radio>,
+                  ]}
+                >
                   <List.Item.Meta
                     avatar={
                       <Avatar className="Avatar" size={48}>

@@ -5,6 +5,7 @@ import CodeMirror from "react-codemirror";
 export default forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false);
   const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
   function show(code) {
     setVisible(true);
     setCode(code);
@@ -12,16 +13,21 @@ export default forwardRef((props, ref) => {
 
   function onSubmit() {
     try {
+      setLoading(true);
       let result = JSON.parse(code);
-      if(!(result instanceof Array)) {
+      if (!(result instanceof Array)) {
         throw new Error("不为数据");
       }
-      props.onSubmit(result);
-      setVisible(false);
+      props.onSubmit(result, (ok) => {
+        setLoading(false);
+        if (ok) {
+          setVisible(false);
+        }
+      });
     } catch (e) {
       console.error(e);
       message.error("格式错误:" + e);
-      
+      setLoading(false);
     }
   }
   useImperativeHandle(ref, () => ({
@@ -50,10 +56,14 @@ export default forwardRef((props, ref) => {
         />
       </div>
 
-      <div style={{
-          marginTop: 10
-      }}>
-        <Button type="primary" onClick={onSubmit}>导入</Button>
+      <div
+        style={{
+          marginTop: 10,
+        }}
+      >
+        <Button type="primary" onClick={onSubmit} loading={loading}>
+          导入
+        </Button>
       </div>
     </Modal>
   );
