@@ -2,31 +2,33 @@ import React, { useState, useRef } from "react";
 import { List, Avatar, Card, Input, Radio, Button, Switch } from "antd";
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 import DownloadDialog from "./components/DownloadDialog";
+import UploadDialog from "./components/UploadDialog";
 
 import "./App.css";
 
-const data = [
-  {
-    username: "张三",
-    desc: "会开锁",
-  },
-  {
-    username: "李四",
-    desc: "会IT",
-  },
-  {
-    username: "王五",
-    desc: "会武功",
-  },
-];
-
 function App() {
   const [searchContent, setSearchContent] = useState("");
+  const [data, setData] = useState([
+    {
+      username: "张三",
+      desc: "会开锁",
+    },
+    {
+      username: "李四",
+      desc: "会IT",
+    },
+    {
+      username: "王五",
+      desc: "会武功",
+    },
+  ]);
   const [mainSwatch, setMainSwatch] = useState(false);
   const downloadDialog = useRef(null);
+  const uploadDialog = useRef(null);
   return (
     <div className="App">
       <DownloadDialog ref={downloadDialog} />
+      <UploadDialog ref={uploadDialog} onSubmit={setData} />
       <Card
         style={{
           textAlign: "center",
@@ -52,6 +54,9 @@ function App() {
               type="link"
               icon={
                 <UploadOutlined
+                  onClick={() => {
+                    uploadDialog.current.show(JSON.stringify(data, 0, 2));
+                  }}
                   style={{
                     fontSize: "2rem",
                   }}
@@ -60,7 +65,7 @@ function App() {
             ></Button>,
             <Button
               onClick={() => {
-                downloadDialog.current.show();
+                downloadDialog.current.show(JSON.stringify(data, 0, 2));
               }}
               type="link"
               icon={
