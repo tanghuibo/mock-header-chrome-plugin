@@ -6,14 +6,20 @@
      "http://*/",
       "https://*/",
       "webRequest",
-      "webRequestBlocking"
+      "webRequestBlocking",
+      "storage"
     ],
+    "icons": 
+    {
+      "16": "img/icon.png",
+      "48": "img/icon.png",
+      "128": "img/icon.png"
+    },
     "browser_action": {
-      "default_popup": "./pop/index.html"
+      "default_popup": "mock-header-pop/build/index.html"
     },
     "background": {
-      "scripts": ["background.js"],
-      "persistent": true
+      "page": "mock-header-ground/build/index.html"
     },
     "manifest_version": 2
   }

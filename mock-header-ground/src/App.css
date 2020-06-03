@@ -17,9 +17,6 @@
   right: 15px;
 }
 
-.mainSwitchDiv {
-  float: right;
-  right: 20px;
-  margin-right: 18px;
-  margin-top: 5px;
+.my-code-mirror {
+  width: 100vw;
 }

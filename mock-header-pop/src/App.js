@@ -1,48 +1,73 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { List, Avatar, Card, Input, Radio, Button, Switch } from "antd";
-import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
-import DownloadDialog from "./components/DownloadDialog";
-import UploadDialog from "./components/UploadDialog";
+import { FormOutlined } from "@ant-design/icons";
+import chromeUtils from './js/chromeUtils';
 
 import "./App.css";
 
 function App() {
   const [searchContent, setSearchContent] = useState(null);
-  const [mainSwatch, setMainSwatch] = useState(false);
+  const [mainSwitch, setMainSwitch] = useState(false);
   const [selectUsername, setSelectUsername] = useState(false);
-  const downloadDialog = useRef(null);
-  const uploadDialog = useRef(null);
-  const [data, setData] = useState([
-    {
-      username: "张三",
-      desc: "会开锁",
-    },
-    {
-      username: "李四",
-      desc: "会IT",
-    },
-    {
-      username: "王五",
-      desc: "会武功",
-    },
-  ]);
-  function uploadData(data, isOk) {
-    setTimeout(() => {
-      setData(data);
-      isOk(true);
-    }, 2000);
+  const [userList, setUserList] = useState([]);
+
+  async function getUserList() {
+    let code = await chromeUtils.getData("userList");
+    if (code == null || code === '') {
+      setUserList([]);
+    } else {
+      setUserList(JSON.parse(code));
+    }
   }
+
+  async function getMainSwitch() {
+    let code = await chromeUtils.getData("mainSwitch");
+    if (code == 'true') {
+      setMainSwitch(true);
+    } else {
+      setMainSwitch(false);
+    }
+  }
+
+  async function getSelectUsername() {
+    let code = await chromeUtils.getData("selectUsername");
+    setSelectUsername(code);
+  }
+
+  function refresh() {
+    getUserList();
+    getMainSwitch();
+    getSelectUsername();
+  }
+
+  function openBackGround() {
+    /* global chrome */
+    window.open(chrome.extension.getBackgroundPage().location.href);
+  }
+
   function changeSelectUser(checked, username) {
     if (!checked) {
       setSelectUsername(null);
     } else {
+      chromeUtils.setData("selectUsername", username);
       setSelectUsername(username);
     }
   }
+
+  function changeMainSwitch(sw) {
+    chromeUtils.setData("mainSwitch", sw ? "true" : "false");
+    setMainSwitch(sw);
+  }
+
+  useEffect(() => {
+    refresh();
+    chromeUtils.addChromeListen("refresh", refresh);
+  }, []);
+
+
+
   return (
     <div className="App">
-      <DownloadDialog ref={downloadDialog} />
-      <UploadDialog ref={uploadDialog} onSubmit={uploadData} />
       <Card
         style={{
           textAlign: "center",
@@ -53,37 +78,24 @@ function App() {
           onChange={({ target: { value } }) => setSearchContent(value)}
           style={{ width: "90%" }}
         />
-        <Switch
+        <div className="mainSwitchDiv"><Switch
           checkedChildren="开启"
           unCheckedChildren="关闭"
-          checked={mainSwatch}
-          onChange={setMainSwatch}
-          className="all-swatch"
-        />
+          checked={mainSwitch}
+          onChange={changeMainSwitch}
+          className="all-Switch"
+        /></div>
       </Card>
-      {mainSwatch ? (
+      {mainSwitch ? (
         <Card
           actions={[
             <Button
               type="link"
               icon={
-                <UploadOutlined
+                <FormOutlined
                   onClick={() => {
-                    uploadDialog.current.show(JSON.stringify(data, 0, 2));
+                    openBackGround();
                   }}
-                  style={{
-                    fontSize: "2rem",
-                  }}
-                />
-              }
-            ></Button>,
-            <Button
-              onClick={() => {
-                downloadDialog.current.show(JSON.stringify(data, 0, 2));
-              }}
-              type="link"
-              icon={
-                <DownloadOutlined
                   style={{
                     fontSize: "2rem",
                   }}
@@ -99,7 +111,7 @@ function App() {
           >
             <List
               itemLayout="horizontal"
-              dataSource={data.filter((item) =>
+              dataSource={userList.filter((item) =>
                 searchContent === null || searchContent === ""
                   ? true
                   : JSON.stringify(item).indexOf(searchContent) >= 0
@@ -141,10 +153,10 @@ function App() {
           </div>
         </Card>
       ) : (
-        <Card>
-          <div style={{ textAlign: "center" }}>插件已关闭</div>
-        </Card>
-      )}
+          <Card>
+            <div style={{ textAlign: "center" }}>插件已关闭</div>
+          </Card>
+        )}
     </div>
   );
 }
