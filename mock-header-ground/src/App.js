@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, message } from "antd";
+import { Button, message, Input, Tag } from "antd";
 import CodeMirror from "react-codemirror";
-import chromeUtils from './js/chromeUtils';
-import './js/background';
+import chromeUtils from "./js/chromeUtils";
 import "./App.css";
 
 function App() {
   const codemirror = useRef(null);
-  const [code, setCode] = useState("");
+  const [userList, setUserList] = useState("");
+  const [urlList, setUrlList] = useState("");
   const [loading, setLoading] = useState(false);
 
   /**
@@ -15,19 +15,13 @@ function App() {
    */
   async function getUserList() {
     let userList = await chromeUtils.getData("userList");
-    if (userList == null || userList === '') {
+    if (userList == null || userList === "") {
       return;
     }
-    setCode(userList);
-    codemirror.current.codeMirror.setValue(userList);
-  }
-
-  /**
-   * 设置数据
-   * @param {*} userList 
-   */
-  async function setUserList(userList) {
-    await chromeUtils.setData("userList", userList);
+    setUserList(userList);
+    codemirror.current.codeMirror.setValue(
+      userList instanceof String ? userList : JSON.stringify(userList)
+    );
   }
 
   function refresh() {
@@ -38,17 +32,17 @@ function App() {
     refresh();
   }, []);
 
-
   async function onSubmit() {
     try {
       setLoading(true);
-      let result = JSON.parse(code);
+      let result = JSON.parse(userList);
       if (!(result instanceof Array)) {
         throw new Error("不为数据");
       }
-      await setUserList(code);
+      await chromeUtils.setData("userList", userList);
+      await chromeUtils.setData("urlList", urlList);
       setLoading(false);
-      message.success("修改成功")
+      message.success("修改成功");
     } catch (e) {
       console.error(e);
       message.error("格式错误:" + e);
@@ -58,24 +52,46 @@ function App() {
 
   return (
     <div className="App">
-      <div
-        style={{
-          border: "1px solid #f0f0f0",
-        }}
-      >
-        <CodeMirror
-          ref={codemirror}
-          onChange={setCode}
-          value={code}
-          className="my-code-mirror"
-          options={{
-            width: "100vw",
-            height: "100vh",
-            mode: "javascript",
-            theme: "eclipse",
-            lineNumbers: true,
+      <div>
+        <Tag color="processing" style={{ width: "80px", textAlign: "center" }}>
+          URL
+        </Tag>
+      </div>
+      <div>
+        <Input.TextArea
+          value={urlList}
+          onChange={(value) => setUrlList(value.target.value)}
+          style={{ width: "100vw" }}
+          placeholder="url与当前值前缀匹配时生效，多个可以换行隔开"
+        ></Input.TextArea>
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <div>
+          <Tag
+            color="processing"
+            style={{ width: "80px", textAlign: "center" }}
+          >
+            用户信息
+          </Tag>
+        </div>
+        <div
+          style={{
+            border: "1px solid #f0f0f0",
           }}
-        />
+        >
+          <CodeMirror
+            ref={codemirror}
+            onChange={setUserList}
+            value={userList}
+            className="my-code-mirror"
+            options={{
+              width: "100vw",
+              mode: "javascript",
+              theme: "eclipse",
+              lineNumbers: true,
+            }}
+          />
+        </div>
       </div>
 
       <div

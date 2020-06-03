@@ -32,7 +32,7 @@ export default {
             if(chrome && chrome.storage && chrome.storage.local) {
                 chrome.storage.local.get(key, data => resove(data[key]));
             } else {
-                resove(data);
+                resove(data[key]);
             }
         });
     },
