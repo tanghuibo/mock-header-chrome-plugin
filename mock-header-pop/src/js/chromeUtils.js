@@ -1,4 +1,6 @@
-let data = {};
+let data = {
+    mainSwitch: "true"
+};
 let funcMap = {};
 /* global chrome */
 if(chrome && chrome.extension && chrome.extension.onRequest) {
@@ -32,7 +34,7 @@ export default {
             if(chrome && chrome.storage && chrome.storage.local) {
                 chrome.storage.local.get(key, data => resove(data[key]));
             } else {
-                resove(data);
+                resove(data[key]);
             }
         });
     },
