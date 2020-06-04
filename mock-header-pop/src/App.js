@@ -104,53 +104,51 @@ function App() {
             ></Button>,
           ]}
         >
-          <div
+          <List
             style={{
               maxHeight: "60vh",
+              overflowY: "scroll"
             }}
-          >
-            <List
-              itemLayout="horizontal"
-              dataSource={userList.filter((item) =>
-                searchContent === null || searchContent === ""
-                  ? true
-                  : JSON.stringify(item).indexOf(searchContent) >= 0
-              )}
-              renderItem={(item) => (
-                <List.Item
-                  actions={[
-                    <Radio
-                      checked={selectUsername === item.username}
-                      onChange={(checked) =>
-                        changeSelectUser(checked, item.username)
-                      }
-                    >
-                      启用
+            itemLayout="horizontal"
+            dataSource={userList.filter((item) =>
+              searchContent === null || searchContent === ""
+                ? true
+                : JSON.stringify(item).indexOf(searchContent) >= 0
+            )}
+            renderItem={(item) => (
+              <List.Item
+                actions={[
+                  <Radio
+                    checked={selectUsername === item.username}
+                    onChange={(checked) =>
+                      changeSelectUser(checked, item.username)
+                    }
+                  >
+                    启用
                     </Radio>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar className="Avatar" size={48}>
-                        {item.username}
-                      </Avatar>
-                    }
-                    title={
-                      <div
-                        style={{
-                          fontWeight: 600,
-                          fontSize: "1.3rem",
-                        }}
-                      >
-                        {item.username}
-                      </div>
-                    }
-                    description={item.desc}
-                  />
-                </List.Item>
-              )}
-            />
-          </div>
+                ]}
+              >
+                <List.Item.Meta
+                  avatar={
+                    <Avatar className="Avatar" size={48}>
+                      {item.username}
+                    </Avatar>
+                  }
+                  title={
+                    <div
+                      style={{
+                        fontWeight: 600,
+                        fontSize: "1.3rem",
+                      }}
+                    >
+                      {item.username}
+                    </div>
+                  }
+                  description={item.desc}
+                />
+              </List.Item>
+            )}
+          />
         </Card>
       ) : (
           <Card>
