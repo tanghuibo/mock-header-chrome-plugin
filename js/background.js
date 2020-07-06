@@ -59,12 +59,12 @@ async function refresh() {
       break;
     }
   }
-  data = { mainSwitch, selectUser };
+  data = { mainSwitch, selectUser, urlList };
 }
 
-function isPass(urlList, url) {
-  for (const urla of urlList) {
-    if(url.startsWith(urla)) {
+function isPass(urlList, initiator) {
+  for (const url of urlList) {
+    if(initiator.startsWith(url)) {
       return true;
     }
   }
@@ -82,13 +82,14 @@ if (chrome && chrome.webRequest && chrome.webRequest.onBeforeSendHeaders) {
       let {
         mainSwitch,
         selectUser,
+        urlList
       } = data;
 
       let headers = selectUser == null ? null : selectUser.headers;
 
       let requestHeaders = request.requestHeaders;
 
-      if (mainSwitch && headers != null && isPass(urlList, request.url)) {
+      if (mainSwitch && headers != null && isPass(urlList, request.initiator)) {
         Object.keys(headers).forEach((name) => {
           let value = headers[name];
           requestHeaders.push({

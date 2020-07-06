@@ -24,8 +24,18 @@ function App() {
     );
   }
 
+
+  async function getUrlList() {
+    let urlList = await chromeUtils.getData("urlList");
+    if (urlList == null || urlList === "") {
+      return;
+    }
+    setUrlList(urlList);
+  }
+
   function refresh() {
     getUserList();
+    getUrlList();
   }
 
   useEffect(() => {

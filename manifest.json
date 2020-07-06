@@ -16,10 +16,10 @@
       "128": "img/icon.png"
     },
     "browser_action": {
-      "default_popup": "mock-header-pop/build/index.html"
+      "default_popup": "pop/index.html"
     },
     "background": {
-      "page": "mock-header-ground/build/index.html"
+      "page": "background/index.html"
     },
     "manifest_version": 2
   }
