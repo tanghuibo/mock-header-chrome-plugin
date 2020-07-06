@@ -20,7 +20,7 @@ function App() {
     }
     setUserList(userList);
     codemirror.current.codeMirror.setValue(
-      userList instanceof String ? userList : JSON.stringify(userList)
+      typeof(userList) === "string" ? userList : JSON.stringify(userList)
     );
   }
 
