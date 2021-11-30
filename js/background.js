@@ -36,6 +36,7 @@ async function refresh() {
   let mainSwitch = await chromeUtils.getData("mainSwitch");
   let userList = await chromeUtils.getData("userList");
   let urlList = await chromeUtils.getData("urlList");
+  let backUrlList = await chromeUtils.getData("backUrlList");
   let selectUsername = await chromeUtils.getData("selectUsername");
   mainSwitch = mainSwitch === "true";
 
@@ -48,7 +49,13 @@ async function refresh() {
   if(urlList != null || urlList instanceof String) {
     urlList = urlList.split("\n");
   } else {
-    urlList = null;
+    urlList = [];
+  }
+
+  if(backUrlList != null || backUrlList instanceof String) {
+    backUrlList = backUrlList.split("\n");
+  } else {
+    backUrlList = [];
   }
 
   let selectUser = null;
@@ -59,12 +66,16 @@ async function refresh() {
       break;
     }
   }
-  data = { mainSwitch, selectUser, urlList };
+  data = { mainSwitch, selectUser, urlList, backUrlList };
 }
 
-function isPass(urlList, initiator) {
-  for (const url of urlList) {
-    if(initiator.startsWith(url)) {
+function requestIsPass({initiator, url}, urlList, backUrlList) {
+  let result = isPass(urlList, initiator) && isPass(backUrlList, url);
+  return result;
+}
+function isPass(myUrlList, url) {
+  for (const myUrl of myUrlList) {
+    if(myUrl != null && myUrl != '' && url.startsWith(myUrl)) {
       return true;
     }
   }
@@ -82,14 +93,14 @@ if (chrome && chrome.webRequest && chrome.webRequest.onBeforeSendHeaders) {
       let {
         mainSwitch,
         selectUser,
-        urlList
+        urlList,
+        backUrlList
       } = data;
 
       let headers = selectUser == null ? null : selectUser.headers;
 
       let requestHeaders = request.requestHeaders;
-
-      if (mainSwitch && headers != null && isPass(urlList, request.initiator)) {
+      if (mainSwitch && headers != null && requestIsPass(request, urlList, backUrlList)) {
         Object.keys(headers).forEach((name) => {
           let value = headers[name];
           requestHeaders.push({

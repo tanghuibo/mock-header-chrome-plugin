@@ -8,6 +8,7 @@ function App() {
   const codemirror = useRef(null);
   const [userList, setUserList] = useState("");
   const [urlList, setUrlList] = useState("");
+  const [backUrlList, setBackUrlList] = useState("");
   const [loading, setLoading] = useState(false);
 
   /**
@@ -33,9 +34,18 @@ function App() {
     setUrlList(urlList);
   }
 
+  async function getBackUrlList() {
+    let backUrlList = await chromeUtils.getData("backUrlList");
+    if (backUrlList == null || backUrlList === "") {
+      return;
+    }
+    setBackUrlList(backUrlList);
+  }
+
   function refresh() {
     getUserList();
     getUrlList();
+    getBackUrlList();
   }
 
   useEffect(() => {
@@ -51,6 +61,7 @@ function App() {
       }
       await chromeUtils.setData("userList", userList);
       await chromeUtils.setData("urlList", urlList);
+      await chromeUtils.setData("backUrlList", backUrlList);
       setLoading(false);
       message.success("修改成功");
     } catch (e) {
@@ -75,6 +86,21 @@ function App() {
           placeholder="url与当前值前缀匹配时生效，多个可以换行隔开"
         ></Input.TextArea>
       </div>
+
+      <div>
+        <Tag color="processing" style={{ marginTop: "10px", width: "80px", textAlign: "center" }}>
+          BACK URL
+        </Tag>
+      </div>
+      <div>
+        <Input.TextArea
+          value={backUrlList}
+          onChange={(value) => setBackUrlList(value.target.value)}
+          style={{ width: "100vw" }}
+          placeholder="url与当前值前缀匹配时生效，多个可以换行隔开"
+        ></Input.TextArea>
+      </div>
+
       <div style={{ marginTop: "10px" }}>
         <div>
           <Tag
