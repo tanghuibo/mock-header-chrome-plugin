@@ -71,8 +71,7 @@ if (window.innerHeight === 0) {
   }
 
   function requestIsPass({ initiator, url }, urlList, backUrlList) {
-    let result = isPass(urlList, initiator) && isPass(backUrlList, url);
-    return result;
+    return (initiator == null || isPass(urlList, initiator)) && isPass(backUrlList, url);
   }
   function isPass(myUrlList, url) {
     for (const myUrl of myUrlList) {
@@ -111,11 +110,12 @@ if (window.innerHeight === 0) {
           });
         }
 
+
         return { requestHeaders };
       },
       {
         urls: ["<all_urls>"],
-        types: ["xmlhttprequest"],
+        types: ["main_frame", "xmlhttprequest"],
       },
       ["requestHeaders", "blocking"]
     );
